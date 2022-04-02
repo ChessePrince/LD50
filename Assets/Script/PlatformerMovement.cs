@@ -10,17 +10,20 @@ public class PlatformerMovement : MonoBehaviour
     public float walkSpeed, jumpSpeed;
     Rigidbody2D rb;
     float moveInput;
+
     [SerializeField] private LayerMask m_WhatIsGround;
     [SerializeField] private Transform m_GroundCheck;
     bool isGrounded;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        facingRight = true;
     }
     void Update()
     {
         CheckForGround();
-        Move();   
+        Move();
+        CheckAxes();
         Flip();
         Jump();
     }
@@ -31,28 +34,16 @@ public class PlatformerMovement : MonoBehaviour
     }
     void Flip()
     {
-        // If the input is moving the player right and the player is facing left...
+        //input is moving the player right and the player is facing left
         if (horizontalValue > 0 && !facingRight)
         {
-            // ... flip the player.
             ActualFlip();
         }
-        // Otherwise if the input is moving the player left and the player is facing right...
+        //input is moving the player left and the player is facing right
         else if (horizontalValue < 0 && facingRight)
         {
-            // ... flip the player.
             ActualFlip();
-        }/*
-        if (horizontalValue < 0 && facingRight == true)
-        {
-            transform.Rotate(0, 180, 0);
-            facingRight = false;
         }
-        else if (horizontalValue > 0 && facingRight == false)
-        {
-            transform.Rotate(0, 180, 0);
-            facingRight = true;
-        }*/
     }
     void CheckForGround()
     {
@@ -62,7 +53,6 @@ public class PlatformerMovement : MonoBehaviour
     {
         // Switch the way the player is labelled as facing.
         facingRight = !facingRight;
-
         // Multiply the player's x local scale by -1.
         Vector3 theScale = transform.localScale;
         theScale.x *= -1;
