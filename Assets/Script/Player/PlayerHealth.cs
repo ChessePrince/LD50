@@ -36,7 +36,7 @@ public class PlayerHealth : MonoBehaviour
         compRnd.material = matWhite;
         //anim.Squash();
         //sfx.PlayHurt();
-        FindObjectOfType<HitStop>().Stop(0.5f);
+        FindObjectOfType<HitStop>().Stop(0.2f);
         StartCoroutine(WaitForIFrames());
         if (health <= 0)
         {
