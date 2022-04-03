@@ -18,8 +18,7 @@ public class PlatformerMovement : MonoBehaviour
     private int jumpCounter;
 
     [SerializeField] private LayerMask groundLayer;
-    //[SerializeField] private Transform m_GroundCheck;
-    //private bool isGrounded;
+    private PlayerAnimation anim;
 
     private BoxCollider2D boxCollider;
     void Start()
@@ -27,6 +26,7 @@ public class PlatformerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         facingRight = true;
         boxCollider = GetComponent<BoxCollider2D>();
+        anim = GetComponent<PlayerAnimation>();
     }
     void Update()
     {
@@ -43,6 +43,8 @@ public class PlatformerMovement : MonoBehaviour
         {
             coyoteCounter = coyoteTime; //Reset coyote counter when on the ground
             jumpCounter = extraJumps; //Reset jump counter to extra jump value
+            if(horizontalValue==0)
+            anim.Idle();
         }
         else 
         { 
@@ -52,15 +54,15 @@ public class PlatformerMovement : MonoBehaviour
 
     void Flip()
     {
-        //input is moving the player right and the player is facing left
-        if (horizontalValue > 0 && !facingRight)
+        if (horizontalValue < 0 && facingRight == true)
         {
-            ActualFlip();
+            transform.Rotate(0, 180, 0);
+            facingRight = false;
         }
-        //input is moving the player left and the player is facing right
-        else if (horizontalValue < 0 && facingRight)
+        else if (horizontalValue > 0 && facingRight == false)
         {
-            ActualFlip();
+            transform.Rotate(0, 180, 0);
+            facingRight = true;
         }
     }
     private bool Grounded()
@@ -68,32 +70,28 @@ public class PlatformerMovement : MonoBehaviour
         RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.down, 0.1f, groundLayer);
         return raycastHit.collider != null;
     }
-    void ActualFlip()
-    {
-        // Switch the way the player is labelled as facing.
-        facingRight = !facingRight;
-        // Multiply the player's x local scale by -1.
-        Vector3 theScale = transform.localScale;
-        theScale.x *= -1;
-        transform.localScale = theScale;
-    }
     void Jump()
     {
         if (coyoteCounter <= 0 && jumpCounter <= 0) return;
         if (Grounded())
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpPower);
+            anim.Jump();
         }
         else
         {
             //If not on the ground and coyote counter bigger than 0 do a normal jump
             if (coyoteCounter > 0)
+            {
                 rb.velocity = new Vector2(rb.velocity.x, jumpPower);
+                anim.Jump();
+            }
             else
             {
                 if (jumpCounter > 0) //If we have extra jumps then jump and decrease the jump counter
                 {
                     rb.velocity = new Vector2(rb.velocity.x, jumpPower);
+                    anim.Jump();
                     jumpCounter--;
                 }
             }
@@ -102,5 +100,7 @@ public class PlatformerMovement : MonoBehaviour
     void Move()
     {
         rb.velocity = new Vector2(horizontalValue * walkSpeed, rb.velocity.y);
+        if(horizontalValue!=0&&Grounded())
+            anim.Run();
     }
 }
