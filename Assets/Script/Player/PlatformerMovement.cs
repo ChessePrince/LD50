@@ -13,6 +13,10 @@ public class PlatformerMovement : MonoBehaviour
     [SerializeField] private float coyoteTime; //How much time the player can hang in the air before jumping
     private float coyoteCounter; //How much time passed since the player ran off the edge
 
+    [Header("Multiple Jumps")]
+    [SerializeField] private int extraJumps;
+    private int jumpCounter;
+
     [SerializeField] private LayerMask groundLayer;
     //[SerializeField] private Transform m_GroundCheck;
     //private bool isGrounded;
@@ -27,14 +31,25 @@ public class PlatformerMovement : MonoBehaviour
     void Update()
     {
         horizontalValue = Input.GetAxisRaw("Horizontal");
-        //CheckForGround();
         Move();
         Flip();
         if ((Input.GetKeyDown(KeyCode.Space)) || (Input.GetKeyDown(KeyCode.UpArrow)))
             Jump();
         if (Input.GetKeyUp(KeyCode.Space) && rb.velocity.y > 0)
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y / 2);
+
+        //help me
+        if (Grounded())
+        {
+            coyoteCounter = coyoteTime; //Reset coyote counter when on the ground
+            jumpCounter = extraJumps; //Reset jump counter to extra jump value
+        }
+        else 
+        { 
+            coyoteCounter -= Time.deltaTime; //Start decreasing coyote counter when not on the ground
+        }
     }
+
     void Flip()
     {
         //input is moving the player right and the player is facing left
@@ -48,11 +63,7 @@ public class PlatformerMovement : MonoBehaviour
             ActualFlip();
         }
     }
-    void CheckForGround()
-    {
-        //isGrounded = Physics2D.OverlapBox(new Vector2(gameObject.transform.position.y, gameObject.transform.position.y - 0.9f), new Vector2(0.6f, 0.2f), 0f, groundLayer);
-    }
-    bool Grounded()
+    private bool Grounded()
     {
         RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.down, 0.1f, groundLayer);
         return raycastHit.collider != null;
@@ -68,10 +79,24 @@ public class PlatformerMovement : MonoBehaviour
     }
     void Jump()
     {
+        if (coyoteCounter <= 0 && jumpCounter <= 0) return;
         if (Grounded())
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpPower);
-            //isGrounded = false;
+        }
+        else
+        {
+            //If not on the ground and coyote counter bigger than 0 do a normal jump
+            if (coyoteCounter > 0)
+                rb.velocity = new Vector2(rb.velocity.x, jumpPower);
+            else
+            {
+                if (jumpCounter > 0) //If we have extra jumps then jump and decrease the jump counter
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, jumpPower);
+                    jumpCounter--;
+                }
+            }
         }
     }
     void Move()
