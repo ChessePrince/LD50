@@ -12,7 +12,7 @@ public class PauseControl : MonoBehaviour
     [SerializeField] KeyCode pauseKey = KeyCode.Escape;
 
     [Header("References")]
-    [SerializeField] GameObject goDeathPanel;
+    [SerializeField] GameObject goDeathMenu;
     [SerializeField] GameObject goPauseMenu;          
     AudioSource audioSource;
     public AudioClip clicClip;
@@ -20,7 +20,7 @@ public class PauseControl : MonoBehaviour
     private void Start()
     {
         goPauseMenu.SetActive(false);
-        goDeathPanel.SetActive(false);
+        goDeathMenu.SetActive(false);
         audioSource = GetComponent<AudioSource>();
         Time.timeScale = 1f;
     }
@@ -82,7 +82,7 @@ public class PauseControl : MonoBehaviour
     {
         if (playerIsDead)
         {
-            goDeathPanel.SetActive(true);
+            goDeathMenu.SetActive(true);
             Time.timeScale = 0f;
         }
     }
