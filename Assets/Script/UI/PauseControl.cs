@@ -22,6 +22,7 @@ public class PauseControl : MonoBehaviour
         goPauseMenu.SetActive(false);
         goDeathPanel.SetActive(false);
         audioSource = GetComponent<AudioSource>();
+        Time.timeScale = 1f;
     }
     void Update()
     {
@@ -30,9 +31,10 @@ public class PauseControl : MonoBehaviour
             gameIsPaused = !gameIsPaused;
             PauseGame();
         }
-        if (playerIsDead)
+        if(Input.GetKeyDown(KeyCode.R))
         {
-            return;
+            Retry();
+            print("aaaa");
         }
     }
     void PauseGame()
@@ -74,13 +76,14 @@ public class PauseControl : MonoBehaviour
     }
     public void PlayClic()
     {
-        audioSource.PlayOneShot(clicClip, 0.8f);
+        //audioSource.PlayOneShot(clicClip, 0.8f);
     }
     public void DeathPanel()
     {
         if (playerIsDead)
         {
             goDeathPanel.SetActive(true);
+            Time.timeScale = 0f;
         }
     }
 }

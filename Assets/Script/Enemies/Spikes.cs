@@ -13,11 +13,11 @@ public class Spikes : MonoBehaviour
     }
     void Start()
     {
-        Move(1);
+        //Move(1);
     }
     private void Update()
     {
-        //Move(1);
+        Move(1);
     }
     void Move(int dir)
     {

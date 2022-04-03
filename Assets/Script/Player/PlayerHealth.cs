@@ -7,11 +7,9 @@ public class PlayerHealth : MonoBehaviour
 {
     public float maxHealth;
     float health;
-    //public GameObject GOplayer;
     SpriteRenderer compRnd;
     public Material matWhite;
     Material matDefault;
-    //public GameObject GOfireflyLight;
     public PManagmentHealth HealthManager;
     PlayerAnimation anim;
     public PauseControl PauseControl;
@@ -22,9 +20,9 @@ public class PlayerHealth : MonoBehaviour
     {
         compRnd = GetComponent<SpriteRenderer>();
         matDefault = compRnd.material;
-        anim = GetComponent<PlayerAnimation>();
+        //anim = GetComponent<PlayerAnimation>();
         health = maxHealth;
-        sfx = GetComponentInChildren<CharacterSfx>();
+        //sfx = GetComponentInChildren<CharacterSfx>();
     }
     private void Start()
     {
@@ -33,19 +31,13 @@ public class PlayerHealth : MonoBehaviour
     }
     void TakeDamage(int amount)
     {
-        //Instantiate(hurtSound, transform.position, Quaternion.identity);
         health -= amount;
-        UpdateHealth();
-        //StartCoroutine(ExecutePlayerFlash());
+        //UpdateHealth();
         compRnd.material = matWhite;
-        anim.Squash();
-        sfx.PlayHurt();
-        //FindObjectOfType<HitStop>().Stop(0.06f);
-        //FindObjectOfType<HitStop>().Stop(0.05f);
+        //anim.Squash();
+        //sfx.PlayHurt();
+        FindObjectOfType<HitStop>().Stop(0.5f);
         StartCoroutine(WaitForIFrames());
-
-        //UpdateHealthUI(health);
-        //hurtAnim.SetTrigger("hurt");
         if (health <= 0)
         {
             Death();
@@ -53,9 +45,9 @@ public class PlayerHealth : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "GreenGlow")
+        if (collision.gameObject.tag == "Spikes")
         {
-            TakeDamage(1);
+            TakeDamage(5);
         }
         if (collision.gameObject.tag == "Enemy")
         {
@@ -74,24 +66,22 @@ public class PlayerHealth : MonoBehaviour
     {
         Physics2D.IgnoreLayerCollision(8, 9, true);
         compRnd.color = new Color(1f, 1f, 1f, 0.75f);
-        //GOfireflyLight.SetActive(false);
 
         yield return new WaitForSeconds(0.75f);
 
         Physics2D.IgnoreLayerCollision(8, 9, false);
         compRnd.color = new Color(1f, 1f, 1f, 1f);
-        //GOfireflyLight.SetActive(true);
     }
     void Death()
     {
-        Destroy(gameObject);
         PauseControl.playerIsDead = true;
         PauseControl.DeathPanel();
         Instantiate(prefabDeath, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
     void UpdateHealth()
     {
-        HealthManager.UpdateHealthUI(health, maxHealth);
+        //HealthManager.UpdateHealthUI(health, maxHealth);
     }
     public void GainHealth()
     {
