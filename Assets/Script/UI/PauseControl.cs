@@ -13,7 +13,7 @@ public class PauseControl : MonoBehaviour
 
     [Header("References")]
     [SerializeField] GameObject goDeathMenu;
-    [SerializeField] GameObject goPauseMenu;          
+    [SerializeField] GameObject goPauseMenu;
     AudioSource audioSource;
     public AudioClip clicClip;
 
