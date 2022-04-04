@@ -34,7 +34,6 @@ public class PauseControl : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.R))
         {
             Retry();
-            print("aaaa");
         }
     }
     void PauseGame()
@@ -76,7 +75,7 @@ public class PauseControl : MonoBehaviour
     }
     public void PlayClic()
     {
-        //audioSource.PlayOneShot(clicClip, 0.8f);
+        audioSource.PlayOneShot(clicClip, 0.8f);
     }
     public void DeathPanel()
     {

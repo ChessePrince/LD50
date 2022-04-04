@@ -5,15 +5,11 @@ using UnityEngine;
 public class Spikes : MonoBehaviour
 {
     private Rigidbody2D rb;
-    public float vel;
+    public int vel;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-    }
-    void Start()
-    {
-        //Move(1);
     }
     private void FixedUpdate()
     {
@@ -22,6 +18,6 @@ public class Spikes : MonoBehaviour
     void Move(int dir)
     {
         //compRB.velocity = dir * transform.up * Time.deltaTime * vel;
-        rb.velocity = new Vector3(0, 2, 0);
+        rb.velocity = new Vector3(0, vel, 0);
     }
 }

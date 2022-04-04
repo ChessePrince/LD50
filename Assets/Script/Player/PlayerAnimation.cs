@@ -32,6 +32,8 @@ public class PlayerAnimation : MonoBehaviour
         {
             anim.Play(run);
         }
+        else
+            return;
     }
     public void Jump()
     {
@@ -39,5 +41,7 @@ public class PlayerAnimation : MonoBehaviour
         {
             anim.Play(jump);
         }
+        else
+            return;
     }
 }
