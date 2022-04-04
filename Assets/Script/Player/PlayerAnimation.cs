@@ -31,7 +31,6 @@ public class PlayerAnimation : MonoBehaviour
         if (!this.anim.GetCurrentAnimatorStateInfo(0).IsName(run))
         {
             anim.Play(run);
-            Debug.Log("run");
         }
     }
     public void Jump()
