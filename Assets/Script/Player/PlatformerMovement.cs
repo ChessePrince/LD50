@@ -38,9 +38,10 @@ public class PlatformerMovement : MonoBehaviour
         {
             Move();
             Flip();
+            IdleAnim();
         }
 
-        if (isGrounded)
+        if (isGrounded && jumpCounter==0)
         {
             jumpCounter = 1;
         }
@@ -48,7 +49,6 @@ public class PlatformerMovement : MonoBehaviour
         if ((Input.GetKeyDown(KeyCode.Space)) || (Input.GetKeyDown(KeyCode.UpArrow)))
             Jump();
 
-        IdleAnim();
     }
     void Flip()
     {
@@ -66,15 +66,15 @@ public class PlatformerMovement : MonoBehaviour
     private bool Grounded()
     {
         RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 
-            0, Vector2.down, 0.1f, groundLayer);
+            0, Vector2.down, 0.05f, groundLayer); 
         return raycastHit.collider != null;
     }
     void Jump()
     {
-        if (jumpCounter > 0)
+        if (jumpCounter == 1)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpPower);
             jumpCounter = 0;
+            rb.velocity = new Vector2(rb.velocity.x, jumpPower);
             anim.Jump();
         }
         else 
@@ -83,12 +83,16 @@ public class PlatformerMovement : MonoBehaviour
     void Move()
     {
         rb.velocity = new Vector2(horizontalValue * walkSpeed, rb.velocity.y);
-        if(horizontalValue!=0 && isGrounded && rb.velocity.y > 0)
+        if (horizontalValue != 0 && isGrounded && rb.velocity.y > 0)
+        {
             anim.Run();
+        }
     }
     void IdleAnim()
     {
-        if (horizontalValue==0 && isGrounded && rb.velocity.y == 0)
+        if (horizontalValue == 0 && isGrounded && rb.velocity.y == 0)
+        {
             anim.Idle();
+        }
     }
 }
